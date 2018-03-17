@@ -66,6 +66,10 @@ public class ItemParser {
         return priceTotals;
     }
 
+    public Integer totalTimesItemSeen(ArrayList<Item> filteredArrayList){
+        return filteredArrayList.size();
+    }
+
     public String checkName(String input) throws ItemParseException {
         String newInput = fixCookie(input);
         Pattern patternName = Pattern.compile("([Nn]..[Ee]:)(\\w+)");
@@ -117,7 +121,7 @@ public class ItemParser {
                 parseStringIntoItem(parsedRawData.get(i));
             } catch (ItemParseException e){
             }
-        return this.countExceptionsThrown;
+        return countExceptionsThrown;
     }
 }
 

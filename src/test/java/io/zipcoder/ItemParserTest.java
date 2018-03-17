@@ -26,6 +26,13 @@ public class ItemParserTest {
                                     +"NAMe:BrEAD;price:1.23;type:Food;expiration:2/25/2016##"
                                     +"NAMe:BrEAD;price:2.23;type:Food;expiration:2/25/2016##";
 
+    private String rawMultipleItemsBroken = "naMe:Milk;price:3.23;type:Food;expiration:1/25/2016##"
+            +"naME:;price:1.23;type:Food;expiration:1/02/2016##"
+            +"NAMe:BrEAD;price:3.23;type:Food;expiration:2/25/2016##"
+            +"NAMe:BrEAD;price:;type:Food;expiration:2/25/2016##"
+            +"NAMe:BrEAD;price:1.23;type:Food;expiration:2/25/2016##"
+            +"NAMe:BrEAD;price:2.23;type:Food;expiration:##";
+
     private ItemParser itemParser;
 
     @Before
@@ -103,6 +110,14 @@ public class ItemParserTest {
     }
 
     @Test
+    public void totalTimesItemSeen() throws ItemParseException {
+        ArrayList<Item> individualItemCountTester = itemParser.filterItemArrayList(itemParser.createItemArrayList(rawMultipleItems2),"bread");
+        Integer expected = 5;
+        Integer actual  = itemParser.totalTimesItemSeen(individualItemCountTester);
+        assertEquals(expected, actual);
+    }
+
+    @Test
     public void checkNameTest1() throws ItemParseException{
         String rawItemTest = "naMe:c00kies;price:3.23;type:Food;expiration:1/25/2016##";
         String expected = "cookies";
@@ -139,6 +154,13 @@ public class ItemParserTest {
         String rawItemTest = "naMe:Milk;price:3.23;type:Food;expiration:1/25/2016##";
         String expected = "1/25/2016";
         String  actual = itemParser.checkExpiration(rawItemTest);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getExceptionsThrownTest() throws ItemParseException{
+        Integer expected = 3;
+        Integer  actual = itemParser.getExceptionsThrown(rawMultipleItemsBroken);
         assertEquals(expected, actual);
     }
 }
