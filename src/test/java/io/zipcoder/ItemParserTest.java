@@ -78,8 +78,6 @@ public class ItemParserTest {
     public void createItemArrayListTest() throws ItemParseException {
         String expected ="name:milk price:3.23 type:food expiration:1/25/2016";
         String actual  = itemParser.createItemArrayList(rawMultipleItems).get(0).toString();
-        System.out.println(itemParser.createItemArrayList(rawMultipleItems));
-
         assertEquals(expected, actual);
     }
 

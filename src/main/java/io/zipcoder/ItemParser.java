@@ -120,8 +120,9 @@ public class ItemParser {
             try {
                 parseStringIntoItem(parsedRawData.get(i));
             } catch (ItemParseException e){
+                countExceptionsThrown++;
             }
-        return countExceptionsThrown;
+        return this.countExceptionsThrown;
     }
 }
 
