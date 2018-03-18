@@ -133,13 +133,7 @@ public class ItemParser {
             Object keyValue = mapEntry.getKey();
             //getValue method returns corresponding key's value
             Object value = mapEntry.getValue();
-            String time;
-            if(value.equals(1)){
-                 time = " time";
-            }
-            else{
-                 time = " times";
-            }
+            String time = (1 < (Integer)value) ?  " times": " time";
             sb.append("Price:   " + keyValue + "\t\t seen: " + value + time + "\n");
             sb.append("-------------\t\t -------------\n");
         }
