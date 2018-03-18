@@ -135,7 +135,9 @@ public class ItemParser {
             Object value = mapEntry.getValue();
             String time = (1 < (Integer)value) ?  " times": " time";
             sb.append("Price:   " + keyValue + "\t\t seen: " + value + time + "\n");
-            sb.append("-------------\t\t -------------\n");
+            if (mapIterator.hasNext()) sb.append(String.format("-------------        -------------\n"));
+            if(priceTotals.size() < 2) sb.append(String.format("-------------        -------------\n"));
+
         }
         return sb.toString();
     }

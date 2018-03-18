@@ -133,16 +133,15 @@ public class ItemParserTest {
         String expected = "name:    Milk\t \t seen: 1 times\n" +
                 "============= \t \t =============\n" +
                 "Price:   3.23\t\t seen: 1 time\n" +
-                "-------------\t\t -------------\n" +
+                "-------------        -------------\n" +
                 "\n" +
                 "name:   Bread\t \t seen: 5 times\n" +
                 "============= \t \t =============\n" +
                 "Price:   3.23\t\t seen: 2 times\n" +
-                "-------------\t\t -------------\n" +
+                "-------------        -------------\n" +
                 "Price:   2.23\t\t seen: 1 time\n" +
-                "-------------\t\t -------------\n" +
+                "-------------        -------------\n" +
                 "Price:   1.23\t\t seen: 2 times\n" +
-                "-------------\t\t -------------\n" +
                 "\n" +
                 "Errors               seen: 0 times";
         String actual = itemParser.formatText(rawMultipleItems2).toString();
@@ -152,11 +151,10 @@ public class ItemParserTest {
     @Test
     public void formatPriceFieldTest() throws ItemParseException {
         String expected = "Price:   3.23\t\t seen: 2 times\n" +
-                "-------------\t\t -------------\n" +
+                "-------------        -------------\n" +
                 "Price:   2.23\t\t seen: 1 time\n" +
-                "-------------\t\t -------------\n" +
-                "Price:   1.23\t\t seen: 2 times\n" +
-                "-------------\t\t -------------\n";
+                "-------------        -------------\n" +
+                "Price:   1.23\t\t seen: 2 times\n";
         String actual = itemParser.formatPriceField(rawMultipleItems2, "bread").toString();
         assertEquals(expected, actual);
     }
