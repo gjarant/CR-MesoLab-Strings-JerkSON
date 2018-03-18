@@ -13,7 +13,8 @@ public class Main {
 
     public static void main(String[] args) throws Exception{
         String output = (new Main()).readRawDataToString();
-        System.out.println(output);
+        ItemParser item = new ItemParser();
+        System.out.println(item.formatText(output));
         // TODO: parse the data in output into items, and display to console.
     }
 }

@@ -79,17 +79,56 @@ public class ItemParser {
         return filterItemArrayList.size();
     }
 
-    public HashSet<String> filterTypeArrayList(String rawData) throws ItemParseException {
+    public ArrayList<String> filterTypeArrayList(String rawData) throws ItemParseException {
         ArrayList<Item> itemArrayList = createItemArrayList(rawData);
-        HashSet<String> itemHashSet = new HashSet<>();
+        ArrayList<String> filterType = new ArrayList<String>();
 
         for(int i = 0; i < itemArrayList.size(); i++) {
-            if (!itemHashSet.contains(itemArrayList.get(i).getName())) {
-                itemHashSet.add(itemArrayList.get(i).getName());
+            if (!filterType.contains(itemArrayList.get(i).getName())) {
+                filterType.add(itemArrayList.get(i).getName());
             }
         }
-        return itemHashSet;
+        return filterType;
     }
+
+    public String formatText(String rawData) throws ItemParseException {
+        ArrayList<String> filterType = filterTypeArrayList(rawData);
+        StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < filterType.size(); i++) {
+                String name = filterType.get(i);
+                Integer total = totalTimesItemSeen(rawData, filterType.get(i));
+                String priceFormated = formatPriceField(rawData, filterType.get(i));
+                sb.append("name: ");
+                sb.append(String.format("%7s", name.substring(0, 1).toUpperCase() + name.substring(1)));
+                sb.append("\t \t");
+                sb.append(" seen: " + total + " times\n");
+                sb.append("============= \t \t =============\n");
+                sb.append(priceFormated + "\n");
+            }
+
+        sb.append("Errors              " + " seen: " + getExceptionsThrown(rawData) + " times");
+
+        return sb.toString();
+    }
+
+    public String formatPriceField(String rawData, String filterType) throws ItemParseException {
+        Map<Double, Integer> priceTotals = itemTypeMapWithCounts(rawData, filterType);
+        StringBuilder sb = new StringBuilder();
+        Set mapSet = (Set) priceTotals.entrySet();
+        Iterator mapIterator = mapSet.iterator();
+        while (mapIterator.hasNext()) {
+            Map.Entry mapEntry = (Map.Entry) mapIterator.next();
+            // getKey Method of HashMap access a key of map
+            Object keyValue = mapEntry.getKey();
+            //getValue method returns corresponding key's value
+            Object value = mapEntry.getValue();
+            sb.append("Price:   " + keyValue + "\t\t seen: " + value + " times" + "\n");
+            sb.append("-------------\t\t -------------\n");
+        }
+        return sb.toString();
+    }
+
     public String checkName(String input) throws ItemParseException {
         String newInput = fixCookie(input);
         Pattern patternName = Pattern.compile("([Nn]..[Ee]:)(\\w+)");
@@ -134,7 +173,6 @@ public class ItemParser {
     }
 
     public Integer getExceptionsThrown(String rawData)  {
-
         ArrayList<String> parsedRawData = parseRawDataIntoStringArray(rawData);
         for (int i = 0; i < parsedRawData.size(); i++)
             try {

@@ -123,12 +123,43 @@ public class ItemParserTest {
 
     @Test
     public void filterTypeArrayListTest() throws ItemParseException {
-        String expected = "[bread, milk]";
+        String expected = "[milk, bread]";
         String actual = itemParser.filterTypeArrayList(rawMultipleItems2).toString();
         assertEquals(expected, actual);
     }
 
+    @Test
+    public void formatTextTest() throws ItemParseException {
+        String expected = "name:    Milk\t \t seen: 1 times\n" +
+                "============= \t \t =============\n" +
+                "Price:   3.23\t\t seen: 1 times\n" +
+                "-------------\t\t -------------\n" +
+                "\n" +
+                "name:   Bread\t \t seen: 5 times\n" +
+                "============= \t \t =============\n" +
+                "Price:   3.23\t\t seen: 2 times\n" +
+                "-------------\t\t -------------\n" +
+                "Price:   2.23\t\t seen: 1 times\n" +
+                "-------------\t\t -------------\n" +
+                "Price:   1.23\t\t seen: 2 times\n" +
+                "-------------\t\t -------------\n" +
+                "\n" +
+                "Errors               seen: 0 times";
+        String actual = itemParser.formatText(rawMultipleItems2).toString();
+        assertEquals(expected, actual);
+    }
 
+    @Test
+    public void formatPriceFieldTest() throws ItemParseException {
+        String expected = "Price:   3.23\t\t seen: 2 times\n" +
+                "-------------\t\t -------------\n" +
+                "Price:   2.23\t\t seen: 1 times\n" +
+                "-------------\t\t -------------\n" +
+                "Price:   1.23\t\t seen: 2 times\n" +
+                "-------------\t\t -------------\n";
+        String actual = itemParser.formatPriceField(rawMultipleItems2, "bread").toString();
+        assertEquals(expected, actual);
+    }
 
     @Test
     public void checkNameTest1() throws ItemParseException{
