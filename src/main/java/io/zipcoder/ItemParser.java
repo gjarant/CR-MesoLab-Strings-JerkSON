@@ -66,10 +66,30 @@ public class ItemParser {
         return priceTotals;
     }
 
-    public Integer totalTimesItemSeen(ArrayList<Item> filteredArrayList){
-        return filteredArrayList.size();
+    public Map<Double, Integer> itemTypeMapWithCounts(String rawData, String filterType) throws ItemParseException {
+        ArrayList<Item> itemArrayList = createItemArrayList(rawData);
+        ArrayList<Item> filterItemArrayList = filterItemArrayList(itemArrayList, filterType);
+        Map<Double, Integer> priceTotals = individualItemCount(filterItemArrayList);
+        return priceTotals;
     }
 
+    public Integer totalTimesItemSeen(String rawData, String filterType) throws ItemParseException {
+        ArrayList<Item> itemArrayList = createItemArrayList(rawData);
+        ArrayList<Item> filterItemArrayList = filterItemArrayList(itemArrayList, filterType);
+        return filterItemArrayList.size();
+    }
+
+    public HashSet<String> filterTypeArrayList(String rawData) throws ItemParseException {
+        ArrayList<Item> itemArrayList = createItemArrayList(rawData);
+        HashSet<String> itemHashSet = new HashSet<>();
+
+        for(int i = 0; i < itemArrayList.size(); i++) {
+            if (!itemHashSet.contains(itemArrayList.get(i).getName())) {
+                itemHashSet.add(itemArrayList.get(i).getName());
+            }
+        }
+        return itemHashSet;
+    }
     public String checkName(String input) throws ItemParseException {
         String newInput = fixCookie(input);
         Pattern patternName = Pattern.compile("([Nn]..[Ee]:)(\\w+)");

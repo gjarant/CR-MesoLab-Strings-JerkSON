@@ -108,12 +108,27 @@ public class ItemParserTest {
     }
 
     @Test
-    public void totalTimesItemSeen() throws ItemParseException {
-        ArrayList<Item> individualItemCountTester = itemParser.filterItemArrayList(itemParser.createItemArrayList(rawMultipleItems2),"bread");
-        Integer expected = 5;
-        Integer actual  = itemParser.totalTimesItemSeen(individualItemCountTester);
+    public void itemTypeMapWithCountsTest() throws ItemParseException {
+        String expected ="{3.23=2, 2.23=1, 1.23=2}";
+        String actual  = itemParser.itemTypeMapWithCounts(rawMultipleItems2,"bread").toString();
         assertEquals(expected, actual);
     }
+
+    @Test
+    public void totalTimesItemSeen() throws ItemParseException {
+        Integer expected = 5;
+        Integer actual  = itemParser.totalTimesItemSeen(rawMultipleItems2, "bread");
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void filterTypeArrayListTest() throws ItemParseException {
+        String expected = "[bread, milk]";
+        String actual = itemParser.filterTypeArrayList(rawMultipleItems2).toString();
+        assertEquals(expected, actual);
+    }
+
+
 
     @Test
     public void checkNameTest1() throws ItemParseException{
