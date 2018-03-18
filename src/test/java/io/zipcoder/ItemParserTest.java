@@ -75,14 +75,14 @@ public class ItemParserTest {
     }
 
     @Test
-    public void createItemArrayListTest() throws ItemParseException {
+    public void createItemArrayListTest() {
         String expected ="name:milk price:3.23 type:food expiration:1/25/2016";
         String actual  = itemParser.createItemArrayList(rawMultipleItems).get(0).toString();
         assertEquals(expected, actual);
     }
 
     @Test
-    public void filterItemArrayListTest() throws ItemParseException {
+    public void filterItemArrayListTest() {
         ArrayList<Item> filterItemArrayListTester = itemParser.createItemArrayList(rawMultipleItems);
         String expected ="[name:bread price:1.23 type:food expiration:1/02/2016, name:bread price:1.23 type:food expiration:2/25/2016]";
         String actual  = itemParser.filterItemArrayList(filterItemArrayListTester,"bread").toString();
@@ -91,7 +91,7 @@ public class ItemParserTest {
     }
 
     @Test
-    public void individualItemCountTest1() throws ItemParseException {
+    public void individualItemCountTest1() {
         ArrayList<Item> individualItemCountTester = itemParser.filterItemArrayList(itemParser.createItemArrayList(rawMultipleItems),"bread");
         String expected ="{1.23=2}";
         String actual  = itemParser.individualItemCount(individualItemCountTester).toString();
@@ -100,7 +100,7 @@ public class ItemParserTest {
     }
 
     @Test
-    public void individualItemCountTest2() throws ItemParseException {
+    public void individualItemCountTest2()  {
         ArrayList<Item> individualItemCountTester = itemParser.filterItemArrayList(itemParser.createItemArrayList(rawMultipleItems2),"bread");
         String expected ="{3.23=2, 2.23=1, 1.23=2}";
         String actual  = itemParser.individualItemCount(individualItemCountTester).toString();
@@ -132,14 +132,14 @@ public class ItemParserTest {
     public void formatTextTest() throws ItemParseException {
         String expected = "name:    Milk\t \t seen: 1 times\n" +
                 "============= \t \t =============\n" +
-                "Price:   3.23\t\t seen: 1 times\n" +
+                "Price:   3.23\t\t seen: 1 time\n" +
                 "-------------\t\t -------------\n" +
                 "\n" +
                 "name:   Bread\t \t seen: 5 times\n" +
                 "============= \t \t =============\n" +
                 "Price:   3.23\t\t seen: 2 times\n" +
                 "-------------\t\t -------------\n" +
-                "Price:   2.23\t\t seen: 1 times\n" +
+                "Price:   2.23\t\t seen: 1 time\n" +
                 "-------------\t\t -------------\n" +
                 "Price:   1.23\t\t seen: 2 times\n" +
                 "-------------\t\t -------------\n" +
@@ -153,7 +153,7 @@ public class ItemParserTest {
     public void formatPriceFieldTest() throws ItemParseException {
         String expected = "Price:   3.23\t\t seen: 2 times\n" +
                 "-------------\t\t -------------\n" +
-                "Price:   2.23\t\t seen: 1 times\n" +
+                "Price:   2.23\t\t seen: 1 time\n" +
                 "-------------\t\t -------------\n" +
                 "Price:   1.23\t\t seen: 2 times\n" +
                 "-------------\t\t -------------\n";
@@ -162,7 +162,7 @@ public class ItemParserTest {
     }
 
     @Test
-    public void checkNameTest1() throws ItemParseException{
+    public void checkNameTest1() {
         String rawItemTest = "naMe:c00kies;price:3.23;type:Food;expiration:1/25/2016##";
         String expected = "cookies";
         String  actual = itemParser.checkName(rawItemTest);
@@ -170,7 +170,7 @@ public class ItemParserTest {
     }
 
     @Test
-    public void checkNameTest2() throws ItemParseException{
+    public void checkNameTest2() {
         String rawItemTest = "naMe:mIlk;price:3.23;type:Food;expiration:1/25/2016##";
         String expected = "milk";
         String  actual = itemParser.checkName(rawItemTest);
@@ -202,7 +202,7 @@ public class ItemParserTest {
     }
 
     @Test
-    public void getExceptionsThrownTest() throws ItemParseException{
+    public void getExceptionsThrownTest() {
         Integer expected = 3;
         Integer  actual = itemParser.getExceptionsThrown(rawMultipleItemsBroken);
         assertEquals(expected, actual);

@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 public class ItemParser {
 
     private Integer countExceptionsThrown = 0;
+    private Integer count = 0;
 
     private ArrayList<String> splitStringWithRegexPattern(String stringPattern, String inputString) {
         return new ArrayList<String>(Arrays.asList(inputString.split(stringPattern)));
@@ -25,20 +26,29 @@ public class ItemParser {
     }
 
     public Item parseStringIntoItem(String rawItem) throws ItemParseException {
-        String name = checkName(rawItem);
-        Double price = Double.valueOf(checkPrice(rawItem));
-        String type = checkType(rawItem);
-        String expiration = checkExpiration(rawItem);
+            if (checkName(rawItem) == null || checkPrice(rawItem) == null || checkType(rawItem) == null
+                    || checkExpiration(rawItem) == null) {
+                throw new ItemParseException();
+            }
 
-        return new Item(name, price, type, expiration);
+            String name = checkName(rawItem);
+            Double price = Double.valueOf(checkPrice(rawItem));
+            String type = checkType(rawItem);
+            String expiration = checkExpiration(rawItem);
+
+            return new Item(name, price, type, expiration);
     }
 
-    public ArrayList<Item> createItemArrayList(String rawData) throws ItemParseException{
+    public ArrayList<Item> createItemArrayList(String rawData) {
         ArrayList<String> temp = parseRawDataIntoStringArray(rawData);
         ArrayList<Item> itemArrayList = new ArrayList<Item>();
 
         for (int i = 0; i <temp.size() ; i++) {
-            itemArrayList.add(parseStringIntoItem(temp.get(i)));
+            try {
+                itemArrayList.add(parseStringIntoItem(temp.get(i)));
+            } catch (ItemParseException e) {
+                count++;
+            }
         }
         return itemArrayList;
     }
@@ -66,20 +76,20 @@ public class ItemParser {
         return priceTotals;
     }
 
-    public Map<Double, Integer> itemTypeMapWithCounts(String rawData, String filterType) throws ItemParseException {
+    public Map<Double, Integer> itemTypeMapWithCounts(String rawData, String filterType)  {
         ArrayList<Item> itemArrayList = createItemArrayList(rawData);
         ArrayList<Item> filterItemArrayList = filterItemArrayList(itemArrayList, filterType);
         Map<Double, Integer> priceTotals = individualItemCount(filterItemArrayList);
         return priceTotals;
     }
 
-    public Integer totalTimesItemSeen(String rawData, String filterType) throws ItemParseException {
+    public Integer totalTimesItemSeen(String rawData, String filterType)  {
         ArrayList<Item> itemArrayList = createItemArrayList(rawData);
         ArrayList<Item> filterItemArrayList = filterItemArrayList(itemArrayList, filterType);
         return filterItemArrayList.size();
     }
 
-    public ArrayList<String> filterTypeArrayList(String rawData) throws ItemParseException {
+    public ArrayList<String> filterTypeArrayList(String rawData)  {
         ArrayList<Item> itemArrayList = createItemArrayList(rawData);
         ArrayList<String> filterType = new ArrayList<String>();
 
@@ -112,7 +122,7 @@ public class ItemParser {
         return sb.toString();
     }
 
-    public String formatPriceField(String rawData, String filterType) throws ItemParseException {
+    public String formatPriceField(String rawData, String filterType)  {
         Map<Double, Integer> priceTotals = itemTypeMapWithCounts(rawData, filterType);
         StringBuilder sb = new StringBuilder();
         Set mapSet = (Set) priceTotals.entrySet();
@@ -123,20 +133,27 @@ public class ItemParser {
             Object keyValue = mapEntry.getKey();
             //getValue method returns corresponding key's value
             Object value = mapEntry.getValue();
-            sb.append("Price:   " + keyValue + "\t\t seen: " + value + " times" + "\n");
+            String time;
+            if(value.equals(1)){
+                 time = " time";
+            }
+            else{
+                 time = " times";
+            }
+            sb.append("Price:   " + keyValue + "\t\t seen: " + value + time + "\n");
             sb.append("-------------\t\t -------------\n");
         }
         return sb.toString();
     }
 
-    public String checkName(String input) throws ItemParseException {
+    public String checkName(String input) {
         String newInput = fixCookie(input);
         Pattern patternName = Pattern.compile("([Nn]..[Ee]:)(\\w+)");
         Matcher matcherName= patternName.matcher(newInput);
 
         if (matcherName.find())
             return matcherName.group(2).toLowerCase();
-        else throw new ItemParseException();
+        else return null;
     }
 
     public String fixCookie(String input){
@@ -145,31 +162,31 @@ public class ItemParser {
         return matcherCookie.replaceAll("cookies");
     }
 
-    public String checkPrice(String input) throws ItemParseException{
+    public String checkPrice(String input) {
         Pattern patternPrice = Pattern.compile("([Pp]...[Ee]:)(\\d\\.\\d{2})");
         Matcher matcherPrice= patternPrice.matcher(input);
 
         if (matcherPrice.find())
             return matcherPrice.group(2);
-        else throw new ItemParseException();
+        else return null;
     }
 
-    public String checkType(String input) throws ItemParseException{
+    public String checkType(String input) {
         Pattern patternType = Pattern.compile("([Tt]..[Ee]:)(\\w+)");
         Matcher matcherType = patternType.matcher(input);
 
         if (matcherType.find())
             return matcherType.group(2).toLowerCase();
-        else throw new ItemParseException();
+        else return null;
     }
 
-    public String checkExpiration(String input) throws ItemParseException{
+    public String checkExpiration(String input) {
         Pattern patternExpiration = Pattern.compile("([Ee]........[Nn]:)(\\d\\/\\d{2}\\/\\d{4})");
         Matcher matcherExpiration = patternExpiration.matcher(input);
 
         if (matcherExpiration.find())
             return matcherExpiration.group(2);
-        else throw new ItemParseException();
+        else return null;
     }
 
     public Integer getExceptionsThrown(String rawData)  {

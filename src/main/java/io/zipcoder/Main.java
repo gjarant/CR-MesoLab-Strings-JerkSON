@@ -14,6 +14,7 @@ public class Main {
     public static void main(String[] args) throws Exception{
         String output = (new Main()).readRawDataToString();
         ItemParser item = new ItemParser();
+        ItemParseException itemParseException = new ItemParseException();
         System.out.println(item.formatText(output));
         // TODO: parse the data in output into items, and display to console.
     }
